@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement Parameters")]
     public float speed = 10;
-    public Vector2 moveInput; //Almacén del input de movimiento de los periféricos que usamos para jugar
+    public Vector2 moveInput; //Almacï¿½n del input de movimiento de los perifï¿½ricos que usamos para jugar
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
@@ -25,7 +25,8 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        playerRb = GetComponent<Rigidbody>();
+        playerRb.sleepThreshold = 0f; // Evita que la bola se duerma
     }
 
     // Update is called once per frame
@@ -41,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Update para calcular movimientos físicos
+        //Update para calcular movimientos fï¿½sicos
         PhysicalMovement();
     }
 
@@ -57,10 +58,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true; // Mientras toque el suelo, puede saltar
+        }
+    }
+
 
     void CinematicMovement()
     {
-        //Movimiento = (Dirección * velocidad * input)
+        //Movimiento = (Direcciï¿½n * velocidad * input)
         //Necesitais multiplicar el movimiento por Time.deltaTime
         transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
         transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
@@ -68,7 +77,7 @@ public class PlayerController : MonoBehaviour
 
     void PhysicalMovement()
     {
-        //Añadir una fuerza al rigidbody = (Dirección * velocidad * input)
+        //Aï¿½adir una fuerza al rigidbody = (Direcciï¿½n * velocidad * input)
         playerRb.AddForce(Vector3.right * speed * moveInput.x);
         playerRb.AddForce(Vector3.forward * speed * moveInput.y);
     }
@@ -83,8 +92,8 @@ public class PlayerController : MonoBehaviour
     {
         //Sustituir el transform.position del player por el del punto de respawn
         transform.position = respawnPoint.position;
-        //Resetear el valor de aceleración del rigidbody
-        playerRb.linearVelocity = new Vector3(0,0,0);
+        //Resetear el valor de aceleraciï¿½n del rigidbody
+        playerRb.linearVelocity = Vector3.zero;
         PlaySFX(2);
     }
 
