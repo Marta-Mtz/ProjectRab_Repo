@@ -14,6 +14,12 @@ public class PlayerController : MonoBehaviour
     [Header("Jump Parameters")]
     public float jumpForce = 6;
     public bool isGrounded = true;
+    public float maxJumpTime = 0.3f; // duración máxima del salto
+    private bool isJumping = false;
+    private float jumpStartTime = 0f;
+
+    [Header("PowerUp Settings")]
+    public float powerUpJumpForce = 20f; // Fuerza del salto del PowerUp
 
     [Header("Respawn System")]
     public float fallLimit = -10;
@@ -38,12 +44,23 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
+
+       
     }
 
     private void FixedUpdate()
     {
-        //Update para calcular movimientos f�sicos
+        // Movimiento físico
         PhysicalMovement();
+
+        float smoothFactor = 0.1f;
+        Vector3 targetVelocity = new Vector3(moveInput.x * speed, playerRb.linearVelocity.y, moveInput.y * speed);
+        playerRb.linearVelocity = Vector3.Lerp(playerRb.linearVelocity, targetVelocity, smoothFactor);
+
+        if(isJumping && Time.time - jumpStartTime >= maxJumpTime)
+    {
+            isJumping = false;
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -56,15 +73,30 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
+      
     }
 
-    private void OnCollisionStay(Collision collision)
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PowerUp"))
+    {
+            
+            playerRb.linearVelocity = new Vector3(playerRb.linearVelocity.x, 0, playerRb.linearVelocity.z);
+            playerRb.AddForce(Vector3.up * powerUpJumpForce, ForceMode.Impulse);
+
+            
+        }
+
+    }  
+   
+    private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isGrounded = true; // Mientras toque el suelo, puede saltar
+            isGrounded = false; // ❌ Cuando sales del suelo, ya no puede saltar
         }
     }
+
 
 
     void CinematicMovement()
@@ -82,8 +114,11 @@ public class PlayerController : MonoBehaviour
         playerRb.AddForce(Vector3.forward * speed * moveInput.y);
     }
 
+
     void Jump()
     {
+        isGrounded = false; // ya no puede saltar otra vez hasta tocar el suelo
+        playerRb.linearVelocity = new Vector3(playerRb.linearVelocity.x, 0, playerRb.linearVelocity.z); // reinicia velocidad vertical
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         PlaySFX(0);
     }
@@ -115,8 +150,15 @@ public class PlayerController : MonoBehaviour
         if (context.performed && isGrounded == true)
         {
             isGrounded = false;
+            isJumping = true;
+            jumpStartTime = Time.time;
+            isGrounded = false;
+
             Jump();
+     
         }
+        
+
     }
 
 
