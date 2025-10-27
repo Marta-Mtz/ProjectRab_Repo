@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Parameters")]
     public float speed = 10;
     public float rotationSpeed = 10f;
-    public Vector2 moveInput; //Almac�n del input de movimiento de los perif�ricos que usamos para jugar
+    public Vector2 moveInput; //Almac n del input de movimiento de los perif ricos que usamos para jugar
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
 
     void CinematicMovement()
     {
-        //Movimiento = (Direcci�n * velocidad * input)
+        //Movimiento = (Direcci n * velocidad * input)
         //Necesitais multiplicar el movimiento por Time.deltaTime
         transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
         transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour
 
     void PhysicalMovement()
     {
-        //A�adir una fuerza al rigidbody = (Direcci�n * velocidad * input)
+        //A adir una fuerza al rigidbody = (Direcci n * velocidad * input)
         playerRb.AddForce(Vector3.right * speed * moveInput.x);
         playerRb.AddForce(Vector3.forward * speed * moveInput.y);
     }
@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour
     {
         //Sustituir el transform.position del player por el del punto de respawn
         transform.position = respawnPoint.position;
-        //Resetear el valor de aceleraci�n del rigidbody
+        //Resetear el valor de aceleraci n del rigidbody
         playerRb.linearVelocity = Vector3.zero;
         PlaySFX(2);
     }
