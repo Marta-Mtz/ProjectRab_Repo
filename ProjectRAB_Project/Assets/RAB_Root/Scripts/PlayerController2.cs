@@ -51,6 +51,53 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        [Header("Editor References")]
+        public Rigidbody playerRb; //Referencia al Rigidbody del player
+    public AudioSource playerAudio; //Ref al emisor de sonidos del player
+
+    [Header("Movement Parameters")]
+    public float speed = 10;
+    public Vector2 moveInput; //Almac�n del input de movimiento de los perif�ricos que usamos para jugar
+
+    [Header("Jump Parameters")]
+    public float jumpForce = 6;
+    public bool isGrounded = true;
+    public float maxJumpTime = 0.3f; // duración máxima del salto
+    private bool isJumping = false;
+    private float jumpStartTime = 0f;
+
+    [Header("PowerUp Settings")]
+    public float powerUpJumpForce = 20f; // Fuerza del salto del PowerUp
+
+    [Header("Respawn System")]
+    public float fallLimit = -10;
+    public Transform respawnPoint;
+
+    [Header("Sound Configuration")]
+    public AudioClip[] soundCollection;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        playerRb = GetComponent<Rigidbody>();
+        playerRb.sleepThreshold = 0f; // Evita que la bola se duerma
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //CinematicMovement();
+        //Respawn por altura
+        if (transform.position.y <= fallLimit)
+        {
+            Respawn();
+        }
+
+
+    }
+
+    private void FixedUpdate()
+    {
         // Movimiento físico
         PhysicalMovement();
 
@@ -58,8 +105,8 @@ public class PlayerController : MonoBehaviour
         Vector3 targetVelocity = new Vector3(moveInput.x * speed, playerRb.linearVelocity.y, moveInput.y * speed);
         playerRb.linearVelocity = Vector3.Lerp(playerRb.linearVelocity, targetVelocity, smoothFactor);
 
-        if(isJumping && Time.time - jumpStartTime >= maxJumpTime)
-    {
+        if (isJumping && Time.time - jumpStartTime >= maxJumpTime)
+        {
             isJumping = false;
         }
     }
@@ -74,22 +121,22 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
-      
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PowerUp"))
-    {
-            
+        {
+
             playerRb.linearVelocity = new Vector3(playerRb.linearVelocity.x, 0, playerRb.linearVelocity.z);
             playerRb.AddForce(Vector3.up * powerUpJumpForce, ForceMode.Impulse);
 
-            
+
         }
 
-    }  
-   
+    }
+
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -145,7 +192,7 @@ public class PlayerController : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnJump(InputAction.CallbackContext context) 
+    public void OnJump(InputAction.CallbackContext context)
     {
 
         if (context.performed && isGrounded == true)
@@ -156,9 +203,9 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
 
             Jump();
-     
+
         }
-        
+
 
     }
 
