@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
-        playerRb.sleepThreshold = 0f; // Evita que la bola se duerma
+        playerRb.sleepThreshold = 0f;
     }
 
     // Update is called once per frame
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isGrounded = false; // ❌ Cuando sales del suelo, ya no puede saltar
+            isGrounded = false; 
         }
     }
 
