@@ -2,7 +2,7 @@
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerControllerPrueba : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [Header("Movement Parameters")]
     public float speed = 10f;
