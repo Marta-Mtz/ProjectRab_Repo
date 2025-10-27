@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Parameters")]
     public float speed = 10;
     public float rotationSpeed = 10f;
-    public Vector2 moveInput; //Almac n del input de movimiento de los perif ricos que usamos para jugar
+    public Vector2 moveInput; //Almac�n del input de movimiento de los perif�ricos que usamos para jugar
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
@@ -47,6 +47,53 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
+    }
+
+    private void FixedUpdate()
+    {
+        [Header("Editor References")]
+        public Rigidbody playerRb; //Referencia al Rigidbody del player
+    public AudioSource playerAudio; //Ref al emisor de sonidos del player
+
+    [Header("Movement Parameters")]
+    public float speed = 10;
+    public Vector2 moveInput; //Almac�n del input de movimiento de los perif�ricos que usamos para jugar
+
+    [Header("Jump Parameters")]
+    public float jumpForce = 6;
+    public bool isGrounded = true;
+    public float maxJumpTime = 0.3f; // duración máxima del salto
+    private bool isJumping = false;
+    private float jumpStartTime = 0f;
+
+    [Header("PowerUp Settings")]
+    public float powerUpJumpForce = 20f; // Fuerza del salto del PowerUp
+
+    [Header("Respawn System")]
+    public float fallLimit = -10;
+    public Transform respawnPoint;
+
+    [Header("Sound Configuration")]
+    public AudioClip[] soundCollection;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        playerRb = GetComponent<Rigidbody>();
+        playerRb.sleepThreshold = 0f; // Evita que la bola se duerma
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //CinematicMovement();
+        //Respawn por altura
+        if (transform.position.y <= fallLimit)
+        {
+            Respawn();
+        }
+
+
     }
 
     private void FixedUpdate()
@@ -102,7 +149,7 @@ public class PlayerController : MonoBehaviour
 
     void CinematicMovement()
     {
-        //Movimiento = (Direcci n * velocidad * input)
+        //Movimiento = (Direcci�n * velocidad * input)
         //Necesitais multiplicar el movimiento por Time.deltaTime
         transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
         transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
@@ -110,7 +157,7 @@ public class PlayerController : MonoBehaviour
 
     void PhysicalMovement()
     {
-        //A adir una fuerza al rigidbody = (Direcci n * velocidad * input)
+        //A�adir una fuerza al rigidbody = (Direcci�n * velocidad * input)
         playerRb.AddForce(Vector3.right * speed * moveInput.x);
         playerRb.AddForce(Vector3.forward * speed * moveInput.y);
     }
@@ -128,7 +175,7 @@ public class PlayerController : MonoBehaviour
     {
         //Sustituir el transform.position del player por el del punto de respawn
         transform.position = respawnPoint.position;
-        //Resetear el valor de aceleraci n del rigidbody
+        //Resetear el valor de aceleraci�n del rigidbody
         playerRb.linearVelocity = Vector3.zero;
         PlaySFX(2);
     }
