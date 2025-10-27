@@ -1,14 +1,17 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+
     [Header("Editor References")]
     public Rigidbody playerRb; //Referencia al Rigidbody del player
     public AudioSource playerAudio; //Ref al emisor de sonidos del player
 
     [Header("Movement Parameters")]
     public float speed = 10;
+    public float rotationSpeed = 10f;
     public Vector2 moveInput; //Almac�n del input de movimiento de los perif�ricos que usamos para jugar
 
     [Header("Jump Parameters")]
@@ -44,8 +47,6 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
-
-       
     }
 
     private void FixedUpdate()
