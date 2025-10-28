@@ -1,18 +1,17 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
+public class PlayerController : MonoBehaviour
 {
-
     [Header("Editor References")]
-    public Rigidbody playerRb; //Referencia al Rigidbody del player
-    public AudioSource playerAudio; //Ref al emisor de sonidos del player
+    public Rigidbody playerRb; // Referencia al Rigidbody del player
+    public AudioSource playerAudio; // Ref al emisor de sonidos del player
 
     [Header("Movement Parameters")]
     public float speed = 10;
     public float rotationSpeed = 10f;
-    public Vector2 moveInput; //Almacén del input de movimiento de los periféricos que usamos para jugar
+    public Vector2 moveInput; // Almacén del input de movimiento de los periféricos
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
@@ -90,14 +89,12 @@ using UnityEngine.InputSystem;
 
     void CinematicMovement()
     {
-        //Movimiento = (Dirección * velocidad * input)
         transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
         transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
     }
 
     void PhysicalMovement()
     {
-        //Añadir una fuerza al rigidbody = (Dirección * velocidad * input)
         playerRb.AddForce(Vector3.right * speed * moveInput.x);
         playerRb.AddForce(Vector3.forward * speed * moveInput.y);
     }
@@ -136,7 +133,6 @@ using UnityEngine.InputSystem;
             isGrounded = false;
             isJumping = true;
             jumpStartTime = Time.time;
-
             Jump();
         }
     }
