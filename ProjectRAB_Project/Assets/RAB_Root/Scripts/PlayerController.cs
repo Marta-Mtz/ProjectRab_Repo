@@ -1,19 +1,18 @@
-﻿using UnityEngine;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerController : MonoBehaviour
 {
-    [Header("Movement Parameters")]
-    public float speed = 10f;
-    public float rotationSpeed = 10f;
-    private Vector3 moveDirection;
-    public Vector2 moveInput; //Almac�n del input de movimiento de los perif�ricos que usamos para jugar
 
     [Header("Editor References")]
     public Rigidbody playerRb; //Referencia al Rigidbody del player
     public AudioSource playerAudio; //Ref al emisor de sonidos del player
-    public Transform cameraTransform; // Referencia para la cámara en el inspector
+
+    [Header("Movement Parameters")]
+    public float speed = 10;
+    public float rotationSpeed = 10f;
+    public Vector2 moveInput; //Almacén del input de movimiento de los periféricos que usamos para jugar
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
@@ -32,51 +31,23 @@ public class PlayerController : MonoBehaviour
     [Header("Sound Configuration")]
     public AudioClip[] soundCollection;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         playerRb.sleepThreshold = 0f; // Evita que la bola se duerma
-        playerRb.freezeRotation = true; // evita que rote con colisiones
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (transform.position.y <= fallLimit)
         {
-            //Respawn();
+            Respawn();
         }
     }
-    void PhysicalMovement()
-    {
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
 
-        // direcciones de la cámara (solo en plano horizontal)
-        Vector3 forward = cameraTransform.forward;
-        Vector3 right = cameraTransform.right;
-        forward.y = 0f;
-        right.y = 0f;
-        forward.Normalize();
-        right.Normalize();
-
-        // dirección de movimiento relativa a la cámara
-        moveDirection = (forward * v + right * h).normalized;
-
-        // rotar el jugador hacia la dirección de movimiento
-        if (moveDirection.magnitude > 0.1f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
-    }
     private void FixedUpdate()
     {
-        // Movimiento físico
         PhysicalMovement();
-
-        playerRb.MovePosition(playerRb.position + moveDirection * speed * Time.fixedDeltaTime);
 
         float smoothFactor = 0.1f;
         Vector3 targetVelocity = new Vector3(moveInput.x * speed, playerRb.linearVelocity.y, moveInput.y * speed);
@@ -87,51 +58,61 @@ public class PlayerController : MonoBehaviour
             isJumping = false;
         }
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isGrounded = true; //Devuelve la capacidad de saltar
+            isGrounded = true;
         }
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             Respawn();
         }
-
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PowerUp"))
         {
-
             playerRb.linearVelocity = new Vector3(playerRb.linearVelocity.x, 0, playerRb.linearVelocity.z);
             playerRb.AddForce(Vector3.up * powerUpJumpForce, ForceMode.Impulse);
-
-
         }
-
     }
 
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isGrounded = false; // ❌ Cuando sales del suelo, ya no puede saltar
+            isGrounded = false;
         }
     }
+
+    void CinematicMovement()
+    {
+        //Movimiento = (Dirección * velocidad * input)
+        transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
+        transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
+    }
+
+    void PhysicalMovement()
+    {
+        //Añadir una fuerza al rigidbody = (Dirección * velocidad * input)
+        playerRb.AddForce(Vector3.right * speed * moveInput.x);
+        playerRb.AddForce(Vector3.forward * speed * moveInput.y);
+    }
+
     void Jump()
     {
-        isGrounded = false; // ya no puede saltar otra vez hasta tocar el suelo
-        playerRb.linearVelocity = new Vector3(playerRb.linearVelocity.x, 0, playerRb.linearVelocity.z); // reinicia velocidad vertical
+        isGrounded = false;
+        playerRb.linearVelocity = new Vector3(playerRb.linearVelocity.x, 0, playerRb.linearVelocity.z);
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         PlaySFX(0);
     }
 
     void Respawn()
     {
-        //Sustituir el transform.position del player por el del punto de respawn
         transform.position = respawnPoint.position;
-        //Resetear el valor de aceleraci�n del rigidbody
         playerRb.linearVelocity = Vector3.zero;
         PlaySFX(2);
     }
@@ -150,19 +131,15 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-
-        if (context.performed && isGrounded == true)
+        if (context.performed && isGrounded)
         {
             isGrounded = false;
             isJumping = true;
             jumpStartTime = Time.time;
-            isGrounded = false;
 
             Jump();
-
         }
-
-
     }
+
     #endregion
 }
