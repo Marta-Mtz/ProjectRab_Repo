@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
+public class PlayerController: MonoBehaviour
 {
 
     [Header("Editor References")]
