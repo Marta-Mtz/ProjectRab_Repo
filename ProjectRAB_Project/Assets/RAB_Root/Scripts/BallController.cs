@@ -3,13 +3,23 @@
 public class BallController : MonoBehaviour
 
 {
-   [ Header("Respawn System")]
+
+    [Header("Editor References")]
+
+    [ Header("Respawn System")]
     public float fallLimit = -10f;
     public Transform respawnPoint;
 
-    public float speed = 5f;
+    [Header("Movement Parameters")]
+    public float speed = 7f;
 
+    [Header("Editor References")]
     private Rigidbody rigid;
+
+    [Header("Jump Parameters")]
+    public float jumpForce = 6;
+
+
 
     private void Update()
     {
