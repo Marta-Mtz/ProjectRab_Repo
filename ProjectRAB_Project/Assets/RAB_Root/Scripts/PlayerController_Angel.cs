@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController_Angel : MonoBehaviour
 {
     [Header("Editor References")]
     public Rigidbody playerRb; //Referencia al Rigidbody del player
@@ -25,13 +25,13 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //CinematicMovement();
+        CinematicMovement();
         //Respawn por altura
         if (transform.position.y <= fallLimit)
         {
@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         //Update para calcular movimientos físicos
-        PhysicalMovement();
+        //PhysicalMovement();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
     void Jump()
     {
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        PlaySFX(0);
+       
     }
 
     void Respawn()
@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour
         //Sustituir el transform.position del player por el del punto de respawn
         transform.position = respawnPoint.position;
         //Resetear el valor de aceleración del rigidbody
-        playerRb.linearVelocity = new Vector3(0,0,0);
+        playerRb.linearVelocity = new Vector3(0, 0, 0);
         PlaySFX(2);
     }
 
@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnJump(InputAction.CallbackContext context) 
+    public void OnJump(InputAction.CallbackContext context)
     {
 
         if (context.performed && isGrounded == true)
