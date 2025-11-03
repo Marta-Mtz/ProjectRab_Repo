@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour
         //Sustituir el transform.position del player por el del punto de respawn
         transform.position = respawnPoint.position;
         //Resetear el valor de aceleración del rigidbody
-        playerRb.linearVelocity = new Vector3(0, 0, 0);
+        playerRb.linearVelocity = new Vector3(0,0,0);
         PlaySFX(2);
     }
 
@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnJump(InputAction.CallbackContext context)
+    public void OnJump(InputAction.CallbackContext context) 
     {
 
         if (context.performed && isGrounded == true)
