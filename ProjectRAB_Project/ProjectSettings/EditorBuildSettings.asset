@@ -30,5 +30,5 @@ EditorBuildSettings:
     path: Assets/RAB_Root/Scenes/SCN_MartaTest 4.unity
     guid: 8fa71e6b272ff5e4ab288ca536c7d336
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 179162ae4188e94468db78f19be36726, type: 3}
   m_UseUCBPForAssetBundles: 0
