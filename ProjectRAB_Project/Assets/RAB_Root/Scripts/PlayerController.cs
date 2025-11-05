@@ -75,7 +75,6 @@ public class PlayerController : MonoBehaviour
 
     void PhysicalMovement()
     {
-<<<<<<< HEAD
         // Direcciones de la c�mara en el plano XZ
         Vector3 camForward = cameraTransform.forward;
         Vector3 camRight = cameraTransform.right;
@@ -93,11 +92,9 @@ public class PlayerController : MonoBehaviour
 
         // Aplicar fuerza en esa direcci�n
         playerRb.AddForce(moveDir * speed, ForceMode.Force);
-=======
         //Adir una fuerza al rigidbody = (Direcci * velocidad * input)
         playerRb.AddForce(Vector3.right * speed * moveInput.x);
         playerRb.AddForce(Vector3.forward * speed * moveInput.y);
->>>>>>> 2c825a777453faa76027923e2b3f8bae6c63f072
     }
 
     void Jump()
