@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerInteractor : MonoBehaviour
+public class PlayerInteractor1 : MonoBehaviour
 {
     [Header("Points System")]
     public int points; //Puntuación actual del player (en juego)
@@ -13,7 +13,7 @@ public class PlayerInteractor : MonoBehaviour
     public int sceneToLoad = 2;
 
     [Header("Sound References")]
-    public PlayerController playerCont; //Ref als cript que contiene las llamadas a sonidos
+    public PlayerControllerM playerCont; //Ref als cript que contiene las llamadas a sonidos
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
