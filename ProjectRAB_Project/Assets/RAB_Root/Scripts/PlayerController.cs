@@ -1,4 +1,4 @@
-Ôªøusing UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -9,13 +9,11 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement Parameters")]
     public float speed = 10;
-    public Vector2 moveInput; //AlmacÈß≠ del input de movimiento de los perifÈßªicos que usamos para jugar
+    public Vector2 moveInput; //AlmacÈn del input de movimiento de los perifÈricos que usamos para jugar
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
     public bool isGrounded = true;
-    public float powerUpJumpForce = 20f; // Fuerza del salto del PowerUp
-    private bool hasPowerUp = false;
 
     [Header("Respawn System")]
     public float fallLimit = -10;
@@ -43,7 +41,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Update para calcular movimientos fÔ®éicos
+        //Update para calcular movimientos fÌsicos
         PhysicalMovement();
     }
 
@@ -57,18 +55,12 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
-        if (collision.gameObject.CompareTag("PowerUp"))
-        {
-            hasPowerUp = true;
-            Jump(); // fuerza el salto autom√°ticamente
-            hasPowerUp = false;
-        }
     }
 
 
     void CinematicMovement()
     {
-        //Movimiento = (DirecciÓâ¢ * velocidad * input)
+        //Movimiento = (DirecciÛn * velocidad * input)
         //Necesitais multiplicar el movimiento por Time.deltaTime
         transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
         transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
@@ -76,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
     void PhysicalMovement()
     {
-        //AÓÉùdir una fuerza al rigidbody = (DirecciÓâ¢ * velocidad * input)
+        //AÒadir una fuerza al rigidbody = (DirecciÛn * velocidad * input)
         playerRb.AddForce(Vector3.right * speed * moveInput.x);
         playerRb.AddForce(Vector3.forward * speed * moveInput.y);
     }
@@ -85,17 +77,13 @@ public class PlayerController : MonoBehaviour
     {
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         PlaySFX(0);
-
-        float jumpStrength = hasPowerUp ? powerUpJumpForce : jumpForce;
-        playerRb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
-        hasPowerUp = false;
     }
 
     void Respawn()
     {
         //Sustituir el transform.position del player por el del punto de respawn
         transform.position = respawnPoint.position;
-        //Resetear el valor de aceleraciÓâ¢ del rigidbody
+        //Resetear el valor de aceleraciÛn del rigidbody
         playerRb.linearVelocity = new Vector3(0,0,0);
         PlaySFX(2);
     }
