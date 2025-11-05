@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
     [Header("Editor References")]
     public Rigidbody playerRb; //Referencia al Rigidbody del player
     public AudioSource playerAudio; //Ref al emisor de sonidos del player
+    public Transform cameraTransform;
 
     [Header("Movement Parameters")]
     public float speed = 10;
@@ -68,9 +69,23 @@ public class PlayerController : MonoBehaviour
 
     void PhysicalMovement()
     {
-        //Añadir una fuerza al rigidbody = (Dirección * velocidad * input)
-        playerRb.AddForce(Vector3.right * speed * moveInput.x);
-        playerRb.AddForce(Vector3.forward * speed * moveInput.y);
+        // Direcciones de la cámara en el plano XZ
+        Vector3 camForward = cameraTransform.forward;
+        Vector3 camRight = cameraTransform.right;
+
+        // Ignorar componente vertical (para no moverse hacia arriba/abajo)
+        camForward.y = 0f;
+        camRight.y = 0f;
+
+        // Normalizar
+        camForward.Normalize();
+        camRight.Normalize();
+
+        // Dirección final de movimiento según input y cámara
+        Vector3 moveDir = (camRight * moveInput.x + camForward * moveInput.y).normalized;
+
+        // Aplicar fuerza en esa dirección
+        playerRb.AddForce(moveDir * speed, ForceMode.Force);
     }
 
     void Jump()
