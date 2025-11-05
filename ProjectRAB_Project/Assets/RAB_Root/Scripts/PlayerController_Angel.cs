@@ -10,6 +10,8 @@ public class PlayerController_Angel : MonoBehaviour
     [Header("Movement Parameters")]
     public float speed = 10;
     public Vector2 moveInput; //AlmacÈn del input de movimiento de los perifÈricos que usamos para jugar
+    public Transform cameraFollowTarget;
+
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
@@ -41,7 +43,7 @@ public class PlayerController_Angel : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Update para calcular movimientos fÌsicos
+        //Update para calcular movimientos f˙êicos
         //PhysicalMovement();
     }
 
@@ -69,14 +71,28 @@ public class PlayerController_Angel : MonoBehaviour
     void PhysicalMovement()
     {
         //AÒadir una fuerza al rigidbody = (DirecciÛn * velocidad * input)
-        playerRb.AddForce(Vector3.right * speed * moveInput.x);
-        playerRb.AddForce(Vector3.forward * speed * moveInput.y);
+        // Convierte el input (x,y) en direcci?n relativa a la c?mara
+        Vector3 camForward = cameraFollowTarget.forward;
+        Vector3 camRight = cameraFollowTarget.right;
+
+        // Evita movimiento vertical por inclinaci?n de c?mara
+        camForward.y = 0;
+        camRight.y = 0;
+        camForward.Normalize();
+        camRight.Normalize();
+
+        // Calcula direcci?n final
+        Vector3 moveDirection = camForward * moveInput.y + camRight * moveInput.x;
+
+        // Aplica fuerza f?sica en esa direcci?n
+        playerRb.AddForce(moveDirection * speed);
+
     }
 
     void Jump()
     {
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        PlaySFX(0);
+       
     }
 
     void Respawn()
