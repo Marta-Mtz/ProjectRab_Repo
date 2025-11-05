@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("PowerUp"))
         {
             hasPowerUp = true;
+            JumpExtra();
         }
     }
 
@@ -101,7 +102,10 @@ public class PlayerController : MonoBehaviour
     {
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         PlaySFX(0);
+    }
 
+    void JumpExtra()
+    {
         float jumpStrength = hasPowerUp ? powerUpJumpForce : jumpForce;
         playerRb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
         hasPowerUp = false;
