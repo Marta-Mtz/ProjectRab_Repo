@@ -22,6 +22,9 @@ public class PlayerController : MonoBehaviour
     public float fallLimit = -10;
     public Transform respawnPoint;
 
+    [Header("Checkpoint System")]
+    public Transform currentCheckpoint; // El último checkpoint alcanzado
+
     [Header("Sound Configuration")]
     public AudioClip[] soundCollection;
 
@@ -63,6 +66,14 @@ public class PlayerController : MonoBehaviour
             hasPowerUp = true;
             JumpExtra();
         }
+
+        if (collision.gameObject.CompareTag("Checkpoint"))
+        {
+            currentCheckpoint = collision.transform;
+            //PlaySFX(1);
+
+        }
+
     }
 
 
@@ -114,10 +125,14 @@ public class PlayerController : MonoBehaviour
     void Respawn()
     {
         //Sustituir el transform.position del player por el del punto de respawn
-        transform.position = respawnPoint.position;
+        //transform.position = respawnPoint.position;
         //Resetear el valor de aceleraci del rigidbody
         playerRb.linearVelocity = new Vector3(0,0,0);
         PlaySFX(2);
+
+        Transform respawnTarget = currentCheckpoint != null ? currentCheckpoint : respawnPoint;
+        transform.position = respawnTarget.position;
+
     }
 
     public void PlaySFX(int soundToPlay)

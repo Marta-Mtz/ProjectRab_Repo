@@ -8,6 +8,7 @@ TagManager:
   - Obstacle
   - Ground
   - PowerUp
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
