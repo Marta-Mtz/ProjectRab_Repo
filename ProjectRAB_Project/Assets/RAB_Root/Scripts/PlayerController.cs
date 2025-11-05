@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -10,11 +10,13 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement Parameters")]
     public float speed = 10;
-    public Vector2 moveInput; //Almacén del input de movimiento de los periféricos que usamos para jugar
+    public Vector2 moveInput; //Almacé§­ del input de movimiento de los perifé§»icos que usamos para jugar
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
     public bool isGrounded = true;
+    public float powerUpJumpForce = 20f; // Fuerza del salto del PowerUp
+    private bool hasPowerUp = false;
 
     [Header("Respawn System")]
     public float fallLimit = -10;
@@ -42,7 +44,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Update para calcular movimientos físicos
+        //Update para calcular movimientos fï¨Žicos
         PhysicalMovement();
     }
 
@@ -56,12 +58,16 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
+        if (collision.gameObject.CompareTag("PowerUp"))
+        {
+            hasPowerUp = true;
+        }
     }
 
 
     void CinematicMovement()
     {
-        //Movimiento = (Dirección * velocidad * input)
+        //Movimiento = (Direcciî‰¢ * velocidad * input)
         //Necesitais multiplicar el movimiento por Time.deltaTime
         transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
         transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
@@ -69,7 +75,8 @@ public class PlayerController : MonoBehaviour
 
     void PhysicalMovement()
     {
-        // Direcciones de la cámara en el plano XZ
+<<<<<<< HEAD
+        // Direcciones de la cï¿½mara en el plano XZ
         Vector3 camForward = cameraTransform.forward;
         Vector3 camRight = cameraTransform.right;
 
@@ -81,24 +88,33 @@ public class PlayerController : MonoBehaviour
         camForward.Normalize();
         camRight.Normalize();
 
-        // Dirección final de movimiento según input y cámara
+        // Direcciï¿½n final de movimiento segï¿½n input y cï¿½mara
         Vector3 moveDir = (camRight * moveInput.x + camForward * moveInput.y).normalized;
 
-        // Aplicar fuerza en esa dirección
+        // Aplicar fuerza en esa direcciï¿½n
         playerRb.AddForce(moveDir * speed, ForceMode.Force);
+=======
+        //Aîƒdir una fuerza al rigidbody = (Direcciî‰¢ * velocidad * input)
+        playerRb.AddForce(Vector3.right * speed * moveInput.x);
+        playerRb.AddForce(Vector3.forward * speed * moveInput.y);
+>>>>>>> 2c825a777453faa76027923e2b3f8bae6c63f072
     }
 
     void Jump()
     {
         playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         PlaySFX(0);
+
+        float jumpStrength = hasPowerUp ? powerUpJumpForce : jumpForce;
+        playerRb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
+        hasPowerUp = false;
     }
 
     void Respawn()
     {
         //Sustituir el transform.position del player por el del punto de respawn
         transform.position = respawnPoint.position;
-        //Resetear el valor de aceleración del rigidbody
+        //Resetear el valor de aceleraciî‰¢ del rigidbody
         playerRb.linearVelocity = new Vector3(0,0,0);
         PlaySFX(2);
     }
