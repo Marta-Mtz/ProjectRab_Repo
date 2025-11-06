@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Checkpoint"))
         {
             currentCheckpoint = collision.transform;
-            //PlaySFX(1);
+            PlaySFX(3);
 
         }
 
