@@ -31,7 +31,7 @@ public class PlayerController_Angel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CinematicMovement();
+        //CinematicMovement();
         //Respawn por altura
         if (transform.position.y <= fallLimit)
         {
@@ -42,7 +42,7 @@ public class PlayerController_Angel : MonoBehaviour
     private void FixedUpdate()
     {
         //Update para calcular movimientos físicos
-        //PhysicalMovement();
+        PhysicalMovement();
     }
 
     private void OnCollisionEnter(Collision collision)
