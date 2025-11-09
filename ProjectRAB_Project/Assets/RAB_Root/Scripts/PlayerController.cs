@@ -10,11 +10,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement Parameters")]
     public float speed = 10;
-<<<<<<< Updated upstream
     public Vector2 moveInput; //Almac駭 del input de movimiento de los perif駻icos que usamos para jugar
-=======
-    public Vector2 moveInput; //Almac�n del input de movimiento de los perif�ricos que usamos para jugar
->>>>>>> Stashed changes
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
@@ -52,11 +48,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-<<<<<<< Updated upstream
         //Update para calcular movimientos f﨎icos
-=======
-        //Update para calcular movimientos f�sicos
->>>>>>> Stashed changes
         PhysicalMovement();
     }
 
@@ -96,11 +88,8 @@ public class PlayerController : MonoBehaviour
 
     void CinematicMovement()
     {
-<<<<<<< Updated upstream
         //Movimiento = (Direcci * velocidad * input)
-=======
         //Movimiento = (Direcci�n * velocidad * input)
->>>>>>> Stashed changes
         //Necesitais multiplicar el movimiento por Time.deltaTime
         transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
         transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
@@ -108,7 +97,6 @@ public class PlayerController : MonoBehaviour
 
     void PhysicalMovement()
     {
-<<<<<<< Updated upstream
         // Direcciones de la c�mara en el plano XZ
         Vector3 camForward = cameraTransform.forward;
         Vector3 camRight = cameraTransform.right;
@@ -127,9 +115,6 @@ public class PlayerController : MonoBehaviour
         // Aplicar fuerza en esa direcci�n
         playerRb.AddForce(moveDir * speed, ForceMode.Force);
         //Adir una fuerza al rigidbody = (Direcci * velocidad * input)
-=======
-        //A�adir una fuerza al rigidbody = (Direcci�n * velocidad * input)
->>>>>>> Stashed changes
         playerRb.AddForce(Vector3.right * speed * moveInput.x);
         playerRb.AddForce(Vector3.forward * speed * moveInput.y);
     }
@@ -150,15 +135,12 @@ public class PlayerController : MonoBehaviour
     void Respawn()
     {
         //Sustituir el transform.position del player por el del punto de respawn
-<<<<<<< Updated upstream
         //transform.position = respawnPoint.position;
         //Resetear el valor de aceleraci del rigidbody
         playerRb.linearVelocity = new Vector3(0,0,0);
-=======
         transform.position = respawnPoint.position;
         //Resetear el valor de aceleraci�n del rigidbody
         playerRb.linearVelocity = Vector3.zero;
->>>>>>> Stashed changes
         PlaySFX(2);
 
         Transform respawnTarget = currentCheckpoint != null ? currentCheckpoint : respawnPoint;
