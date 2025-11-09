@@ -1,59 +1,46 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class MovingPlatform : MonoBehaviour
 {
-    [Header("Puntos de recorrido")]
-    public Transform[] waypoints;        // Puntos por donde se moverá la plataforma
-    public float speed = 2f;             // Velocidad del movimiento
-    public bool loop = true;             // Si vuelve al inicio o no
-
-    private int currentIndex = 0;
-    private int direction = 1;           // 1 = hacia adelante, -1 = hacia atrás
+    public GameObject[] waypoints;
+    public float speed;
+    private int waypointIndex;
 
     void Update()
     {
-        if (waypoints.Length < 2) return;
+        MovePlatform();
+    }
 
-        // Mover hacia el siguiente punto
-        Transform target = waypoints[currentIndex];
-        transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
-
-        // Si llegó al punto, cambia de objetivo
-        if (Vector3.Distance(transform.position, target.position) < 0.05f)
+    void MovePlatform()
+    {
+        if (Vector3.Distance(transform.position, waypoints[waypointIndex].transform.position) < 0.1f)
         {
-            if (loop)
-            {
-                currentIndex = (currentIndex + 1) % waypoints.Length;
-            }
-            else
-            {
-                // Rebote tipo ping-pong
-                if (currentIndex == waypoints.Length - 1)
-                    direction = -1;
-                else if (currentIndex == 0)
-                    direction = 1;
+            waypointIndex++;
 
-                currentIndex += direction;
+            if (waypointIndex >= waypoints.Length) 
+            {
+                waypointIndex = 0;
             }
         }
+
+        transform.position = Vector3.MoveTowards(transform.position, waypoints[waypointIndex].transform.position, speed* Time.deltaTime);
     }
 
-    // --- OPCIONAL ---
-    // Para que el jugador se mueva junto con la plataforma
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            other.transform.SetParent(transform);
-        }
-    }
+    //private void OnCollisionEnter(Collision collision)
+    //{
+        //if (collision.gameObject.CompareTag("Player"))
+        //{
+            //collision.gameObject.transform.SetParent(transform);
+        //}
+    //}
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            other.transform.SetParent(null);
-        }
-    }
+    //private void OnCollisionExit(Collision collision)
+    //{
+        //if(collision.gameObject.CompareTag("Player"))
+        //{
+            //collision.gameObject.transform.SetParent(null);
+        //}
+    //}
 }
 

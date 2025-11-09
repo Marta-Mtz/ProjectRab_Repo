@@ -31,7 +31,8 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        playerRb = GetComponent<Rigidbody>();
+        playerRb.sleepThreshold = 0f; // Evita que la bola se duerma
     }
 
     // Update is called once per frame
@@ -76,10 +77,19 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true; // Mientras toque el suelo, puede saltar
+        }
+    }
+
 
     void CinematicMovement()
     {
         //Movimiento = (Direcci * velocidad * input)
+        //Movimiento = (Direcci�n * velocidad * input)
         //Necesitais multiplicar el movimiento por Time.deltaTime
         transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
         transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
@@ -128,6 +138,9 @@ public class PlayerController : MonoBehaviour
         //transform.position = respawnPoint.position;
         //Resetear el valor de aceleraci del rigidbody
         playerRb.linearVelocity = new Vector3(0,0,0);
+        transform.position = respawnPoint.position;
+        //Resetear el valor de aceleraci�n del rigidbody
+        playerRb.linearVelocity = Vector3.zero;
         PlaySFX(2);
 
         Transform respawnTarget = currentCheckpoint != null ? currentCheckpoint : respawnPoint;
