@@ -30,6 +30,9 @@ EditorBuildSettings:
     path: Assets/RAB_Root/Scenes/Parte_Angel.unity
     guid: a68a0a43e1ccde54780a01dcec091ee3
   - enabled: 1
+    path: Assets/RAB_Root/Scenes/CinematicRana.unity
+    guid: 608fb28282d3e8244a6ae0c6b62c8058
+  - enabled: 1
     path: Assets/RAB_Root/Scenes/SCN_Victory.unity
     guid: dd759d768f6cc6f469c52681e4f2f139
   - enabled: 0
