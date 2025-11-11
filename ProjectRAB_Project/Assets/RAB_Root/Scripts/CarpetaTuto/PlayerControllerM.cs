@@ -51,10 +51,10 @@ public class PlayerControllerM : MonoBehaviour
         {
             isGrounded = true; //Devuelve la capacidad de saltar
         }
-        if (collision.gameObject.CompareTag("Obstacle"))
-        {
+        //if (collision.gameObject.CompareTag("Obstacle"))
+        //{
           //  Respawn();
-        }
+       // }
     }
 
 
@@ -90,7 +90,8 @@ public class PlayerControllerM : MonoBehaviour
 
     public void PlaySFX(int soundToPlay)
     {
-        playerAudio.PlayOneShot(soundCollection[soundToPlay]);
+       
+        //playerAudio.PlayOneShot(soundCollection[soundToPlay]);
     }
 
     #region Input Methods

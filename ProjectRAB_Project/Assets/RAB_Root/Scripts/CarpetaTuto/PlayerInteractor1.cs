@@ -29,7 +29,7 @@ public class PlayerInteractor1 : MonoBehaviour
             LoadScene();
         }
 
-        pointsText.text = "Points: " + points.ToString();
+       // pointsText.text = "Points: " + points.ToString();
     }
 
     private void OnTriggerEnter(Collider other)
