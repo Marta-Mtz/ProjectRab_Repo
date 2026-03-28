@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -6,18 +6,24 @@ public class PlayerController : MonoBehaviour
     [Header("Editor References")]
     public Rigidbody playerRb; //Referencia al Rigidbody del player
     public AudioSource playerAudio; //Ref al emisor de sonidos del player
+    public Transform cameraTransform;
 
     [Header("Movement Parameters")]
     public float speed = 10;
-    public Vector2 moveInput; //AlmacÈn del input de movimiento de los perifÈricos que usamos para jugar
+    public Vector2 moveInput; //AlmacÈß≠ del input de movimiento de los perifÈßªicos que usamos para jugar
 
     [Header("Jump Parameters")]
     public float jumpForce = 6;
     public bool isGrounded = true;
+    public float powerUpJumpForce = 20f; // Fuerza del salto del PowerUp
+    private bool hasPowerUp = false;
 
     [Header("Respawn System")]
     public float fallLimit = -10;
     public Transform respawnPoint;
+
+    [Header("Checkpoint System")]
+    public Transform currentCheckpoint; // El √∫ltimo checkpoint alcanzado
 
     [Header("Sound Configuration")]
     public AudioClip[] soundCollection;
@@ -25,7 +31,8 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        playerRb = GetComponent<Rigidbody>();
+        playerRb.sleepThreshold = 0f; // Evita que la bola se duerma
     }
 
     // Update is called once per frame
@@ -41,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Update para calcular movimientos fÌsicos
+        //Update para calcular movimientos fÔ®éicos
         PhysicalMovement();
     }
 
@@ -55,12 +62,34 @@ public class PlayerController : MonoBehaviour
         {
             Respawn();
         }
+        if (collision.gameObject.CompareTag("PowerUp"))
+        {
+            hasPowerUp = true;
+            JumpExtra();
+        }
+
+        if (collision.gameObject.CompareTag("Checkpoint"))
+        {
+            currentCheckpoint = collision.transform;
+            PlaySFX(3);
+
+        }
+
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true; // Mientras toque el suelo, puede saltar
+        }
     }
 
 
     void CinematicMovement()
     {
-        //Movimiento = (DirecciÛn * velocidad * input)
+        //Movimiento = (DirecciÓâ¢ * velocidad * input)
+        //Movimiento = (DirecciÔøΩn * velocidad * input)
         //Necesitais multiplicar el movimiento por Time.deltaTime
         transform.Translate(Vector3.right * speed * moveInput.x * Time.deltaTime);
         transform.Translate(Vector3.forward * speed * moveInput.y * Time.deltaTime);
@@ -68,7 +97,24 @@ public class PlayerController : MonoBehaviour
 
     void PhysicalMovement()
     {
-        //AÒadir una fuerza al rigidbody = (DirecciÛn * velocidad * input)
+        // Direcciones de la cÔøΩmara en el plano XZ
+        Vector3 camForward = cameraTransform.forward;
+        Vector3 camRight = cameraTransform.right;
+
+        // Ignorar componente vertical (para no moverse hacia arriba/abajo)
+        camForward.y = 0f;
+        camRight.y = 0f;
+
+        // Normalizar
+        camForward.Normalize();
+        camRight.Normalize();
+
+        // DirecciÔøΩn final de movimiento segÔøΩn input y cÔøΩmara
+        Vector3 moveDir = (camRight * moveInput.x + camForward * moveInput.y).normalized;
+
+        // Aplicar fuerza en esa direcciÔøΩn
+        playerRb.AddForce(moveDir * speed, ForceMode.Force);
+        //AÓÉùdir una fuerza al rigidbody = (DirecciÓâ¢ * velocidad * input)
         playerRb.AddForce(Vector3.right * speed * moveInput.x);
         playerRb.AddForce(Vector3.forward * speed * moveInput.y);
     }
@@ -79,13 +125,27 @@ public class PlayerController : MonoBehaviour
         PlaySFX(0);
     }
 
+    void JumpExtra()
+    {
+        float jumpStrength = hasPowerUp ? powerUpJumpForce : jumpForce;
+        playerRb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
+        hasPowerUp = false;
+    }
+
     void Respawn()
     {
         //Sustituir el transform.position del player por el del punto de respawn
-        transform.position = respawnPoint.position;
-        //Resetear el valor de aceleraciÛn del rigidbody
+        //transform.position = respawnPoint.position;
+        //Resetear el valor de aceleraciÓâ¢ del rigidbody
         playerRb.linearVelocity = new Vector3(0,0,0);
+        transform.position = respawnPoint.position;
+        //Resetear el valor de aceleraciÔøΩn del rigidbody
+        playerRb.linearVelocity = Vector3.zero;
         PlaySFX(2);
+
+        Transform respawnTarget = currentCheckpoint != null ? currentCheckpoint : respawnPoint;
+        transform.position = respawnTarget.position;
+
     }
 
     public void PlaySFX(int soundToPlay)
